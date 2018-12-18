@@ -23,8 +23,4 @@
     <ProjectReference Include="..\DynamicDependency\DynamicDependency.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="RNDC.Generator" Version="1.2018.1122.1" />
-  </ItemGroup>
-
 </Project>

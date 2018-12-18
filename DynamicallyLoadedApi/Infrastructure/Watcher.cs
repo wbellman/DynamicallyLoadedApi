@@ -25,7 +25,6 @@ namespace DynamicallyLoadedApi.Infrastructure {
       ILogger<Watcher> log,
       IOptionsMonitor<WatcherSettings> monitor
     ) {
-      ChangeProvider = DynamicControllerChangeProvider.Instance;
       Manager        = manager;
       Environment    = environment;
       Lifetime       = lifetime;
@@ -41,16 +40,13 @@ namespace DynamicallyLoadedApi.Infrastructure {
       UpdateFileWatch(Settings.PluginDir);
     }
 
-    private IOptionsMonitor<WatcherSettings> Monitor        { get; }
-    private ILogger<Watcher>                 Log            { get; }
-    private IApplicationLifetime             Lifetime       { get; }
-    private ControllerFeature                ControllerFeature    { get; }
-    private ApplicationPartManager           Manager        { get; }
-    private IHostingEnvironment              Environment    { get; }
-    private DynamicControllerChangeProvider  ChangeProvider { get; }
-    private FileSystemWatcher                FileWatch      { get; set; }
-    private SemaphoreSlim                    Semaphore      { get; }
-
+    private IOptionsMonitor<WatcherSettings> Monitor           { get; }
+    private ILogger<Watcher>                 Log               { get; }
+    private IApplicationLifetime             Lifetime          { get; }
+    private ApplicationPartManager           Manager           { get; }
+    private IHostingEnvironment              Environment       { get; }
+    private FileSystemWatcher                FileWatch         { get; set; }
+    private SemaphoreSlim                    Semaphore         { get; }
 
     private WatcherSettings Settings => Monitor.CurrentValue;
 
@@ -135,7 +131,7 @@ namespace DynamicallyLoadedApi.Infrastructure {
         var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
         if (asm == null) {
           Log.LogWarning("Failed to load: {path}", path);
-          //return;
+          return;
         }
 
         UnloadAssembly(asm.GetName().Name);
@@ -143,9 +139,12 @@ namespace DynamicallyLoadedApi.Infrastructure {
 
         var controllerFeature = new ControllerFeature();
         Manager.PopulateFeature(controllerFeature);
+        Log.LogDebug("Active Controllers:");
+        foreach (var controller in controllerFeature.Controllers) {
+          Log.LogDebug("Controller: {controller}", controller.GetType().Name);
+        }
 
       } catch (Exception ex) {
-        //Report.Exception(ex);
         Log.LogError(ex,"Load failed");
         Log.LogError("Failed to load assembly. Path {path}", path);
       } finally {

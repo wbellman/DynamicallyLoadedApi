@@ -24,20 +24,5 @@ namespace DynamicallyLoadedApi.Controllers {
     public IActionResult Assemblies() {
       return Ok(new {assemblies = Watcher.Assemblies});
     }
-
-    [HttpGet("assemblies/unload")]
-    public IActionResult Unload([FromQuery] string name) {
-      try {
-        Watcher.UnloadAssembly(name);
-        return Ok(new {message = "Unloaded", timestamp = DateTime.Now});
-      } catch (Exception ex) {
-        //Report.Exception(ex);
-        return StatusCode((int) HttpStatusCode.InternalServerError,
-                          new {
-                            message   = $"{ex.GetType().Name}: {ex.Message}", stacktrace = ex.StackTrace,
-                            timestamp = DateTime.Now
-                          });
-      }
-    }
   }
 }

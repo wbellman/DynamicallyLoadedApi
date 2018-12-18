@@ -29,11 +29,11 @@ namespace DynamicallyLoadedApi {
        .AddMvc();
 
       services
-       .AddSingleton<Watcher>()
-       .AddSingleton(DynamicControllerChangeProvider.Instance);
+        .AddSingleton<Watcher>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    // Watcher is included here for purposes of instantiation.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, Watcher watch, ILoggerFactory factory) {
       if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();
