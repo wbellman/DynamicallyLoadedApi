@@ -4,6 +4,7 @@ using DynamicallyLoadedApi.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,6 +31,10 @@ namespace DynamicallyLoadedApi {
 
       services
         .AddSingleton<Watcher>();
+
+      services
+       .AddSingleton<IActionDescriptorChangeProvider>(DynamicApiDescriptorChangeProvider.Instance)
+       .AddSingleton(DynamicApiDescriptorChangeProvider.Instance);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -137,6 +137,9 @@ namespace DynamicallyLoadedApi.Infrastructure {
         UnloadAssembly(asm.GetName().Name);
         Manager.ApplicationParts.Add(new AssemblyPart(asm));
 
+        DynamicApiDescriptorChangeProvider.Instance.HasChanged = true;
+        DynamicApiDescriptorChangeProvider.Instance.TokenSource.Cancel();
+
         var controllerFeature = new ControllerFeature();
         Manager.PopulateFeature(controllerFeature);
         Log.LogDebug("Active Controllers:");
